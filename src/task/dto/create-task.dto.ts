@@ -1,0 +1,14 @@
+import { Type } from "class-transformer";
+import { IsDate, IsString } from "class-validator";
+
+export class CreateTaskDto {
+    @IsString()
+    title: string
+
+    @IsString()
+    description: string
+
+    @IsDate()
+    @Type(() => Date) 
+    endTime: Date
+}
