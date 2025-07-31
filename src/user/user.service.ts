@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -30,9 +30,13 @@ export class UserService {
 
   
 
-  async findOne(id:number){
-      return await this.userRepo.findOneBy({id})
+  async findOne(id: number) {
+  if (isNaN(id)) {
+    throw new BadRequestException('Invalid user ID');
   }
+  return this.userRepo.findOneBy({ id });
+}
+
 
 
   async findAll() {

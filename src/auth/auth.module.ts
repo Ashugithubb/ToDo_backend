@@ -12,8 +12,6 @@ import { UserModule } from 'src/user/user.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guard/jwt.auth';
 
-
-
 @Module({
   imports: [UserModule,HasingModule,ConfigModule,JwtModule.registerAsync({
     useFactory: async (configService: ConfigService) => ({

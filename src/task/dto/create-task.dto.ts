@@ -9,6 +9,10 @@ export class CreateTaskDto {
     description: string
 
     @IsDate()
-    @Type(() => Date) 
+    @Type(() => Date)
+    startTime: Date
+
+    @IsDate()
+    @Type(() => Date)
     endTime: Date
 }
