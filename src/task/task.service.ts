@@ -61,38 +61,111 @@ export class TaskService {
   }
 
 
-  async getFilteredTasks(query: GetTaskQueryDto) {
-    const { page = 1, limit = 10, title, startTime, endTime } = query;
+  // async getFilteredTasks(query: GetTaskQueryDto) {
+  //   const { page = 1, limit = 10, title, startTime, endTime } = query;
 
-     const where: FindOptionsWhere<Task> = {};
-    if (title) {
-      where.title = Like(`%${title}%`);
-    }
+  //    const where: FindOptionsWhere<Task> = {};
+  //   if (title) {
+  //     where.title = Like(`%${title}%`);
+  //   }
 
-    if (startTime && endTime) {
-      where.startTime = Between(startTime, endTime);
-    } else if (startTime) {
-      where.startTime = Between(startTime, new Date());
-    } else if (endTime) {
-      where.startTime = Between(new Date(0), endTime);
-    }
-    const [task, total] = await this.taskRepo.findAndCount({
-      where,
-      skip: (page - 1) * limit,
-      take: limit,
-      // order: { startTime: 'ASC' },
-      order: { id: 'DESC' }
-    });
-    return {
-      total,
-      page,
-      limit,
-      task,
-    };
+  //   if (startTime && endTime) {
+  //     where.startTime = Between(startTime, endTime);
+  //   } else if (startTime) {
+  //     where.startTime = Between(startTime, new Date());
+  //   } else if (endTime) {
+  //     where.startTime = Between(new Date(0), endTime);
+  //   }
+  //   const [task, total] = await this.taskRepo.findAndCount({
+  //     where,
+  //     skip: (page - 1) * limit,
+  //     take: limit,
+  //     // order: { startTime: 'ASC' },
+  //     order: { id: 'DESC' }
+  //   });
+  //   return {
+  //     total,
+  //     page,
+  //     limit,
+  //     task,
+  //   };
+  // }
+async getFilteredTasks(query: GetTaskQueryDto) {
+  const {
+    page = 1,
+    limit = 10,
+    title,
+    startTime,
+    endTime,
+    creatorId,
+    assigneeIds,
+  } = query;
+
+  const qb = this.taskRepo
+    .createQueryBuilder('task')
+    .leftJoinAndSelect('task.user', 'creator')
+    .leftJoinAndSelect('task.assigne', 'assigne')
+    .leftJoinAndSelect('assigne.user', 'assignedUser');
+
+  if (title) {
+    qb.andWhere('task.title ILIKE :title', { title: `%${title}%` });
   }
 
+  if (startTime && endTime) {
+    qb.andWhere('task.startTime BETWEEN :start AND :end', {
+      start: startTime,
+      end: endTime,
+    });
+  } else if (startTime) {
+    qb.andWhere('task.startTime >= :start', { start: startTime });
+  } else if (endTime) {
+    qb.andWhere('task.startTime <= :end', { end: endTime });
+  }
+
+  if (creatorId) {
+    qb.andWhere('creator.id = :creatorId', { creatorId });
+  }
+
+  if (assigneeIds && assigneeIds.length > 0) {
+    qb.andWhere('assignedUser.id IN (:...assigneeIds)', { assigneeIds });
+  }
+
+  const [task, total] = await qb
+    .orderBy('task.id', 'DESC')
+    .skip((page - 1) * limit)
+    .take(limit)
+    .getManyAndCount();
+
+  return {
+    total,
+    page,
+    limit,
+    task,
+  };
 }
-//order: { startTime: 'DESC', title: 'ASC' }
+
+
+ 
+// //working filter on createorId and AssigneId
+// async filterTaskBasedOnCreatorAndAssignees(creatorId?: number, assigneeIds?: number[]) {
+//   const query = this.taskRepo
+//     .createQueryBuilder('task')
+//     .leftJoinAndSelect('task.user', 'creator')
+//     .leftJoinAndSelect('task.assigne', 'assigne')
+//     .leftJoinAndSelect('assigne.user', 'assignedUser');
+
+//   if (creatorId) {
+//     query.where('creator.id = :creatorId', { creatorId });
+//   }
+
+//   if (assigneeIds && assigneeIds.length > 0) {
+//     query.andWhere('assignedUser.id IN (:...assigneeIds)', { assigneeIds });
+//   }
+
+//   return await query.getMany();
+// }
 
 
 
+
+}

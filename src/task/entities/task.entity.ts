@@ -24,5 +24,5 @@ export class Task {
     user: User
 
     @OneToMany(() => Assigne, (a) => a.task)
-    assigne: Assigne
+    assigne: Assigne[]
 }

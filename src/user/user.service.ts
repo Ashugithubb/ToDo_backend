@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { HasingService } from 'src/hasing/hasing.service';
 
 @Injectable()
@@ -50,4 +50,20 @@ export class UserService {
   async remove(id: number) {
     return await this.userRepo.delete(id);
   }
+
+
+async searchUsers(q:string){
+  return await this.userRepo.find({
+    where: [
+      { name: ILike(`%${q}%`) },
+      { email: ILike(`%${q}%`) }
+    ],
+    take: 7,
+  });
+}
+
+
+
+
+
 }

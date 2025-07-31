@@ -7,7 +7,7 @@ import { UpdateAssigneDto } from './dto/update-assigne.dto';
 export class AssignesController {
   constructor(private readonly assignesService: AssignesService) {}
 
-  @Post('task/:taskid/user/userId')
+  @Post('task/:taskid/user/:userId')
   create(@Param('taskid')taskid:string,
         @Param('userId')userId:string,
         @Body()createAsddignDto:CreateAssigneDto) {

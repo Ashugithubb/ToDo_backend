@@ -47,4 +47,18 @@ export class TaskController {
     const userId = req.user.id
     return this.taskService.remove(+id, userId);
   }
+
+// @Get('filter/creator/assignes')
+// filterTasks(
+//   @Query('creatorId') creatorId: number,
+//   @Query('assigneeIds') assigneeIdsRaw: string,
+// ) {
+//   const assigneeIds = assigneeIdsRaw
+//     ? assigneeIdsRaw.split(',').map((id) => parseInt(id.trim(), 10))
+//     : [];
+
+//   return this.taskService.filterTaskBasedOnCreatorAndAssignees(creatorId, assigneeIds);
+// }
+
+
 }

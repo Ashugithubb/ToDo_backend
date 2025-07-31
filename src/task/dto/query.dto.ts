@@ -1,28 +1,34 @@
-import { Type } from "class-transformer";
-import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
+// get-task-query.dto.ts
+import { IsOptional, IsString, IsDate, IsNumber, IsArray } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class GetTaskQueryDto {
-    @IsOptional()
-    @Type(() => Number)
-    @IsNumber()
-    page?: number = 1;
+  @IsOptional()
+  @Type(() => Number)
+  page?: number;
 
-    @IsOptional()
-    @Type(() => Number)
-    @IsNumber()
-    limit?: number = 10;
+  @IsOptional()
+  @Type(() => Number)
+  limit?: number;
 
-    @IsOptional()
-    @IsString()
-    title?: string;
+  @IsOptional()
+  @IsString()
+  title?: string;
 
-    @IsOptional()
-    @IsDate()
-    @Type(() => Date)
-    startTime: Date
+  @IsOptional()
+  @Type(() => Date)
+  startTime?: Date;
 
-    @IsOptional()
-    @IsDate()
-    @Type(() => Date)
-    endTime: Date
+  @IsOptional()
+  @Type(() => Date)
+  endTime?: Date;
+
+  @IsOptional()
+  @Type(() => Number)
+  creatorId?: number;
+
+  @IsOptional()
+  @IsArray()
+  @Type(() => Number)
+  assigneeIds?: number[];
 }
