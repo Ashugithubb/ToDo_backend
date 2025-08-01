@@ -16,15 +16,15 @@ export default class TaskSeeder implements Seeder {
 
             tasks.push(
                 taskRepo.create({
-                    title: faker.person.firstName(), // Generates a random first name
-                    description: faker.lorem.sentence(), // Generates a random sentence
+                    title: faker.person.firstName(), 
+                    description: faker.lorem.sentence(), 
                     startTime: faker.date.future(), 
-                    endTime: faker.date.future({ refDate: new Date(Date.now() + 1000 * 60 * 60) }), // Another future date after startTime
+                    endTime: faker.date.future({ refDate: new Date(Date.now() + 1000 * 60 * 60) }),
                 }),
             );
         }
 
         await taskRepo.save(tasks);
-        console.log('✅ 20 task seeded.');
+        console.log('20 task seeded.');
     }
 }
