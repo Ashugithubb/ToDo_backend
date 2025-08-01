@@ -6,6 +6,6 @@ import TaskSeeder from './seeds/task.seed';
 async function seed() {
   await AppDataSource.initialize();
   await new TaskSeeder().run(AppDataSource);
-  console.log('✅ User seeding complete');
+  console.log('User seeding complete');
 }
 seed();
